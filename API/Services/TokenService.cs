@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Text;
 using API.Entities;
 using API.Interfaces;
-using Microsoft.CodeAnalysis;
 using Microsoft.IdentityModel.Tokens;
 
 namespace API.Services;
@@ -28,7 +27,7 @@ public class TokenService(IConfiguration config) : ITokenService
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
-        var token = new tokenHandler.CreateToken(tokenDescriptor);
+        var token = tokenHandler.CreateToken(tokenDescriptor);
 
         return tokenHandler.WriteToken(token);
     }
