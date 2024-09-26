@@ -16,7 +16,9 @@ public class AccountController(
     [HttpPost("register")]
     public async Task<ActionResult<UserResponse>> RegisterAsync(RegisterRequest request)
     {
-        if(await UserExistsAsync(request.UserName)) return BadRequest("Username already in use");
+        if(await UserExistsAsync(request.UserName)){
+            return BadRequest("Username already in use");
+        }
 
         //Unicamente lo ejecuta y luego ejecuta el dispose
         using var hmac = new HMACSHA512();
@@ -30,9 +32,10 @@ public class AccountController(
 
         context.Users.Add(user);
         await context.SaveChangesAsync();
+        
         return new UserResponse
         {
-            UserName = user.UserName,
+            Username = user.UserName,
             Token = tokenService.CreateToken(user)
         };
     }
@@ -43,19 +46,21 @@ public class AccountController(
         var user = await context.Users.FirstOrDefaultAsync(x => 
             x.UserName.ToLower() == request.UserName.ToLower());
 
-        if(user == null) return Unauthorized("Invalid username or password");
+        if(user == null)
+            return Unauthorized("Invalid username or password");
+
 
         using var hmac = new HMACSHA512(user.PasswordSalt);
         var computeHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(request.Password));
 
-        for(int i = 0; i<computeHash.Length;i++){
-            if(computeHash[i] != user.PasswordHash[i]){
+        for(int i = 0; i<computeHash.Length;i++)
+            if(computeHash[i] != user.PasswordHash[i])
                 return Unauthorized("Invalid username or password");
-            }
-        }
+        
+        
 
         return new UserResponse{
-            UserName = user.UserName,
+            Username = user.UserName,
             Token = tokenService.CreateToken(user)
         };
     }
