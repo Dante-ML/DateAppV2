@@ -24,20 +24,20 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
             } else {
               toastr.error(error.error, error.status);
             }
-          break;
+            break;
           case 401:
             toastr.error("Unautorized", error.status);
-          break;
+            break;
           case 404:
             router.navigateByUrl("/not-found");
-          break;
+            break;
           case 500:
             const navigationExtras: NavigationExtras = {state: {error: error.error}};
             router.navigateByUrl("server-error", navigationExtras);
-          break;
+            break;
           default:
             toastr.error("the unexpected error happende")
-          break;
+            break;
         }
       }
       throw error;
