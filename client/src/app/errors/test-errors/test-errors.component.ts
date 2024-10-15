@@ -9,7 +9,7 @@ import { Component, inject } from '@angular/core';
   styleUrl: './test-errors.component.css'
 })
 export class TestErrorsComponent {
-  baseUrl = "http://localhost:5001/api/";
+  baseUrl = "https://localhost:5001/api/";
   private http = inject(HttpClient);
   validationErrors: String[] = [];
 
