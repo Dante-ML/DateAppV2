@@ -1,47 +1,55 @@
+namespace API.Controllers;
 using API.Data;
-using API.Entities;
+using API.DTOs;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-namespace API.Controllers;
 
 [Authorize]
 public class UsersController : BaseApiController
 {
     private readonly IUserRepository _repository;
+    private readonly IMapper _mapper;
 
-    public UsersController(IUserRepository repository){
+    public UsersController(IUserRepository repository, IMapper mapper)
+    {
         _repository = repository;
+        _mapper = mapper;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<AppUser>>> GetAllAsync()
+    public async Task<ActionResult<IEnumerable<MemberResponse>>> GetAllAsync()
     {
-        //Se determina en tiempo de ejecución
         var users = await _repository.GetAllAsync();
 
-        return Ok(users);
+        var response = _mapper.Map<IEnumerable<MemberResponse>>(users);
+
+        return Ok(response);
     }
 
-    [HttpGet("{Id:int}")]
-    public async Task<ActionResult<AppUser>> GetByIdAsync(int id)
+    [HttpGet("{id:int}")] // api/users/2
+    public async Task<ActionResult<MemberResponse>> GetByIdAsync(int id)
     {
-        //Se determina en tiempo de ejecución
         var user = await _repository.GetByIdAsync(id);
 
-        if(user == null) return NotFound();
- 
-        return user;
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        return _mapper.Map<MemberResponse>(user);
     }
 
-    [HttpGet("{username}")]
-    public async Task<ActionResult<AppUser>> GetUsersByUsernameAsync(string username)
+    [HttpGet("{username}")] // api/users/Calamardo
+    public async Task<ActionResult<MemberResponse>> GetByUsernameAsync(string username)
     {
         var user = await _repository.GetByUsernameAsync(username);
 
-        if(user == null) return NotFound();
- 
-        return user;
-    }
+        if (user == null)
+        {
+            return NotFound();
+        }
 
+        return _mapper.Map<MemberResponse>(user);
+    }
 }
