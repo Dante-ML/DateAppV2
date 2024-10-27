@@ -9,10 +9,7 @@ public class UsersController : BaseApiController
 {
     private readonly IUserRepository _repository;
 
-    public UsersController(IUserRepository repository)
-    {
-        _repository = repository;
-    }
+    public UsersController(IUserRepository repository) => _repository = repository;
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MemberResponse>>> GetAllAsync()
