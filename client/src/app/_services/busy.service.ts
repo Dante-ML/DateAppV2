@@ -9,12 +9,9 @@ export class BusyService {
   
   busy(): void {
     this.busyRequestCount++;
-    this.spinnerService.show(undefined, {
-      type: "ball-fall",
-      bdColor: "rgba(2153,0,76,0.5)",
-      color: "rgba(224,244,244,1)"
-    });
+    this.spinnerService.show(undefined, {});
   }
+  
   idle(): void {
     this.busyRequestCount--;
     if (this.busyRequestCount <= 0) {
