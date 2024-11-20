@@ -48,7 +48,7 @@ public class AccountController(
             x.UserName.ToLower() == request.UserName.ToLower());
 
         if(user == null)
-            return Unauthorized("Invalid username or password");
+            return Unauthorized("Invalid username");
 
 
         using var hmac = new HMACSHA512(user.PasswordSalt);
@@ -56,7 +56,7 @@ public class AccountController(
 
         for(int i = 0; i<computeHash.Length;i++)
             if(computeHash[i] != user.PasswordHash[i])
-                return Unauthorized("Invalid username or password");
+                return Unauthorized("Invalid password");
         
         
 
