@@ -54,7 +54,8 @@ public class APIWebApplicationFactory<IStartup> : WebApplicationFactory<Startup>
                     try
                     {
                         await context.Database.MigrateAsync();
-                        await Seed.SeedUserAsync(context);
+                        _loadTestData(context);
+                        //await Seed.SeedUserAsync(context);
                     }
                     catch (Exception ex)
                     {
@@ -63,7 +64,7 @@ public class APIWebApplicationFactory<IStartup> : WebApplicationFactory<Startup>
                     }
                 }
             });
-    private void __loadTestData(DataContext appDbContext)
+    private void _loadTestData(DataContext appDbContext)
     {
         appDbContext.Database.EnsureCreated();
         if (!LoadTestData<AppUser>.Run(appDbContext, "UserSeedData.json"))
@@ -72,6 +73,7 @@ public class APIWebApplicationFactory<IStartup> : WebApplicationFactory<Startup>
         }
     }
 }
+
 internal static class LoadTestData<T> where T : class
 {
     internal static readonly string FLD_SEED_DATA = "SeedData";
