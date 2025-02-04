@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 
 public class BuggyControllerTests
 {
-    private readonly string apiRoute = "api/buggy";
+    private readonly string apiRoute = "API/buggy";
     private readonly HttpClient _client;
     private HttpResponseMessage httpResponse;
     private string requestUrl;
@@ -27,7 +27,7 @@ public class BuggyControllerTests
     {
         // Arrange
         var expectedStatusCode = "OK";
-        requestUrl = "api/account/login";
+        requestUrl = "API/account/login";
         var loginRequest = new LoginRequest
         {
             UserName = "arenita",
