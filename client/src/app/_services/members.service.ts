@@ -50,7 +50,15 @@ setMainPhoto(photo: Photo){
   ); 
 }
 
-  deletePhoto(photoId: number){
-    return this.http.delete(this.baseUrl + "users/photo/" + photoId); ) 
-  }
+deletePhoto(photo: Photo){
+  return this.http.delete(this.baseUrl + "users/photo/" + photo.id).pipe(
+    tap(() => {
+      this.members.update(members => members.map(m => {
+        if(m.photos.includes(photo)){
+          m.photos = m.photos.filter(p => p.id === photo.id)
+        }
+        return m;
+      }))
+    })
+  ); 
 }
