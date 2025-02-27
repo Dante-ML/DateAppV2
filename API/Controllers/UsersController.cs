@@ -81,5 +81,26 @@ public class UsersController : BaseApiController
             new {username = user.UserName}, _mapper.Map<PhotoResponse>(photo));
         }
         return BadRequest("Problema al agregar la foto");
+
+        [HttpPut("photo/{photoId:int}")]
+        public async Task<ActionResult> SetPhotoAsMain(int photoId){
+            var user = await _repository.GetByUsernameAsync(User.GetUserName());
+
+            if(user == null) return BadRequest("Usuarion No Encontrado");
+
+            var photo = user.Photos.FirstOrDefault(p => p.Id == photoId);
+        
+            if (photo == null || photo.IsMain) return BadRequest("No se puede establecer esta foto como principal");
+
+            var currentMain = user.Photos.FirstOrDefault(p=> p.IsMain);
+
+            if (currentMain != null) currentMain.IsMain = false;
+            
+            photo.IsMain = true;
+
+            if(await _repository.SaveAllAsync()) return NoContent();
+
+            return BadRequest("No hubo problema");
+        }
     }
 }
