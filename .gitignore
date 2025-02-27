@@ -401,3 +401,5 @@ API/dating.db
 *.db
 coveragereport
 TestResult
+
+*.env
