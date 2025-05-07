@@ -29,8 +29,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-8">
-            <tabset class="member-tabset">
+        <div class="col-8"><app-member-messages [username]="member.userName"></app-member-messages><app-member-messages [username]="member.userName"></app-member-messages>
                 <tab heading="About {{member.knownAs}}">
                     <h4>Description</h4>
                     <p>{{member.introduction}}</p>
@@ -57,7 +56,7 @@
                     }
                 </tab>
                 <tab heading="Mensajes">
-                    <p>!Los mensajes van'ir aquí!</p>
+                    <app-member-messages [username]="member.userName"></app-member-messages>
                 </tab>
             </tabset>
         </div>
