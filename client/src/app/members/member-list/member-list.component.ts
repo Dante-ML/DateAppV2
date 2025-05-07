@@ -4,11 +4,12 @@ import { Member } from '../../_models/member';
 import { MemberCardComponent } from '../member-card/member-card.component';
 import { FormsModule } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
 @Component({
   selector: 'app-member-list',
   standalone: true,
-  imports: [MemberCardComponent, PaginationModule, FormsModule],
+  imports: [MemberCardComponent, PaginationModule, FormsModule, ButtonsModule],
   templateUrl: './member-list.component.html',
   styleUrl: './member-list.component.css'
 })
@@ -25,13 +26,13 @@ export class MemberListComponent implements OnInit {
     }
   }
 
+  loadMembers() {
+    this.membersService.getMembers(this.userParams);
+  }
+
   resetFilters() {
     this.userParams = new UserParams(this.accountService.currentUser());
     this.loadMembers();
-  }
-
-  loadMembers() {
-    this.membersService.getMembers(this.userParams);
   }
 
   pageChanged(event: any) {
