@@ -34,7 +34,7 @@ public class UsersController : BaseApiController
     [HttpGet("{username}", Name="GetByUsername")] // api/users/Calamardo
     public async Task<ActionResult<MemberResponse>> GetByUsernameAsync(string username)
     {
-        var member = await _repository.GetMemberAsync(username);
+        var member = await _repository.GetMemberAsync(username.ToLowerInvariant());
 
         if (member == null)
         {
@@ -42,7 +42,7 @@ public class UsersController : BaseApiController
         }
 
         return member;
-    }
+    }   
 
     [HttpPut]
     public async Task<ActionResult> UpdateUser(MemberUpdateRequest request)
@@ -87,8 +87,10 @@ public class UsersController : BaseApiController
             new {username = user.UserName}, _mapper.Map<PhotoResponse>(photo));
         }
         return BadRequest("Problema al agregar la foto");
-
+    }
+    
         [HttpPut("photo/{photoId:int}")]
+
         public async Task<ActionResult> SetPhotoAsMain(int photoId){
             var user = await _repository.GetByUsernameAsync(User.GetUserName());
 
@@ -109,7 +111,7 @@ public class UsersController : BaseApiController
             return BadRequest("No hubo problema");
         }
 
-       [HttpDelete("photo/{photoId:int}")]
+        [HttpDelete("photo/{photoId:int}")]
         public async Task<ActionResult> DeletePhoto(int photoId)
         {
             var user = await _repository.GetByUsernameAsync(User.GetUserName());

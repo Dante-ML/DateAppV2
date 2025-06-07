@@ -1,5 +1,4 @@
 using System.Security.Cryptography;
-using System.Text;
 using API.Data;
 using API.DTOs;
 using API.Entities;
@@ -7,11 +6,12 @@ using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Controllers;
 
 public class AccountController(
-    DataContext context,
+    UserManager<AppUser> userManager,
     ITokenService tokenService,
     IMapper mapper) : BaseApiController
 {
@@ -23,14 +23,16 @@ public class AccountController(
         }
 
         //Unicamente lo ejecuta y luego ejecuta el dispose
-        using var hmac = new HMACSHA512();
         var user = mapper.Map<AppUser>(request);
-        user.UserName = request.Username.ToLowerInvariant();   
+        user.UserName = request.Username.ToLowerInvariant();
+        var result = await userManager.CreateAsync(user, request.Password);   
 
-        context.Users.Add(user);
-        await context.SaveChangesAsync();
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
 
-       return new UserResponse
+        return new UserResponse
         {
             Username = user.UserName,
             Token = tokenService.CreateToken(user),
@@ -41,12 +43,19 @@ public class AccountController(
     [HttpPost("login")]
     public async Task<ActionResult<UserResponse>> LoginAsync(LoginRequest request)
     {
-        var user = await context.Users
+        var user = await userManager.Users
         .Include(x => x.Photos)
-        .FirstOrDefaultAsync(x => x.UserName.ToLowerInvariant() == request.Username.ToLowerInvariant());
+        .FirstOrDefaultAsync(x => x.NormalizedUserName == request.Username.ToUpperInvariant());
 
-        if (user == null || user.UserName == null)
+        if (user == null || user.UserName == null){
             return Unauthorized("Invalid username");
+        }
+            
+        var result = await userManager.CheckPasswordAsync(user, request.Password);
+
+        if (!result){
+            return Unauthorized("Invalid username or password");
+        }
 
         return new UserResponse{
             Username = user.UserName,
@@ -57,5 +66,5 @@ public class AccountController(
     }
 
     private async Task<bool> UserExistsAsync(string username) => 
-        await context.Users.AnyAsync(u => u.NormalizedUserName == username.ToUpper());
+        await userManager.Users.AnyAsync(u => u.NormalizedUserName == username.ToUpperInvariant());
 }
