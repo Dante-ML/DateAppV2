@@ -1,10 +1,13 @@
 namespace API;
+
 using API.Extensions;
 using API.Middlewares;
+using API.SignalR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 public class Startup
 {
     private readonly IConfiguration _config;
@@ -29,6 +32,10 @@ public class Startup
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseEndpoints(endpoints => endpoints.MapControllers());
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+            endpoints.MapHub<PresenceHub>("hubs/presence");
+        });
     }
 }
