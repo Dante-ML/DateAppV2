@@ -35,7 +35,7 @@ public class AccountController(
         return new UserResponse
         {
             Username = user.UserName,
-            Token = tokenService.CreateToken(user),
+            Token = await tokenService.CreateToken(user),
             KnownAs = user.KnownAs
         };
     }
@@ -60,7 +60,8 @@ public class AccountController(
         return new UserResponse{
             Username = user.UserName,
             KnownAs = user.KnownAs,
-            Token = tokenService.CreateToken(user),
+            Token = await tokenService.CreateToken(user),
+            Gender = user.Gender,
             PhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain)?.Url
         };
     }
