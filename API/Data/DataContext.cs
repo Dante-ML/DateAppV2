@@ -5,8 +5,9 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace API.Data;
 
-public class DataContext(DbContextOptions options) : IdentityDbContext<AppUser, AppRole, int, IdentityUserClaim<int>, AppUserRole,
-        IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>(options)
+public class DataContext(DbContextOptions options) : IdentityDbContext<
+        AppUser, AppRole, int,
+        IdentityUserClaim<int>, AppUserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>(options)
 {
     public DbSet<UserLike> Likes { get; set; }
     public DbSet<Message> Messages { get; set; }
