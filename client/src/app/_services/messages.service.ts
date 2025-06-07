@@ -40,7 +40,7 @@ export class MessagesService {
     this.hubConnection.on("UpdatedGroup", (group: MessageGroup) => 
     {
       if (group.connections.some(x => x.username === otherUsername)) {
-        this.messageThread.update(messages => {Add commentMore actions
+        this.messageThread.update(messages => {
           messages.forEach(message => {
             if (!message.dateRead) {
               message.dateRead = new Date(Date.now());
