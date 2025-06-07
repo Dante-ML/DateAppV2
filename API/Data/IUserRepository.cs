@@ -1,15 +1,16 @@
-using API.DTOs;
-using API.Entities;
-
 namespace API.Data;
+
+using API.DataEntities;
+using API.DTOs;
+using API.Helpers;
 
 public interface IUserRepository
 {
-    void Update(AppUser user);
-    Task<bool> SaveAllAsync();
-    Task<IEnumerable<AppUser>> GetAllAsync();
-    Task<AppUser?> GetByIdAsync(int id);
-    Task<AppUser?> GetByUsernameAsync(string username);     
-    Task<IEnumerable<MemberResponse>> GetMembersAsync();
-    Task<MemberResponse?> GetMemberAsync(string username);
+    public Task<IEnumerable<AppUser>> GetAllAsync();
+    public Task<AppUser?> GetByIdAsync(int id);
+    public Task<AppUser?> GetByUsernameAsync(string username);
+    public Task<MemberResponse?> GetMemberAsync(string username);
+    public Task<PagedList<MemberResponse>> GetMembersAsync(UserParams userParams);
+    public Task<bool> SaveAllAsync();
+    public void Update(AppUser user);
 }

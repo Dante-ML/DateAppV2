@@ -11,14 +11,14 @@ namespace API.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Groups",
+                name: "MessageGroups",
                 columns: table => new
                 {
                     Name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Groups", x => x.Name);
+                    table.PrimaryKey("PK_MessageGroups", x => x.Name);
                 });
 
             migrationBuilder.CreateTable(
@@ -33,9 +33,9 @@ namespace API.Data.Migrations
                 {
                     table.PrimaryKey("PK_Connections", x => x.ConnectionId);
                     table.ForeignKey(
-                        name: "FK_Connections_Groups_MessageGroupName",
+                        name: "FK_Connections_MessageGroups_MessageGroupName",
                         column: x => x.MessageGroupName,
-                        principalTable: "Groups",
+                        principalTable: "MessageGroups",
                         principalColumn: "Name");
                 });
 
@@ -52,7 +52,7 @@ namespace API.Data.Migrations
                 name: "Connections");
 
             migrationBuilder.DropTable(
-                name: "Groups");
+                name: "MessageGroups");
         }
     }
 }
